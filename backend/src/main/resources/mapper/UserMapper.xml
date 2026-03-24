@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ticket.modules.system.mapper.UserMapper">
+
+    <select id="selectByUsername" resultType="com.ticket.modules.system.entity.User">
+        SELECT * FROM system_user
+        WHERE username = #{username}
+          AND deleted = 0
+    </select>
+
+    <select id="selectByCustomerId" resultType="com.ticket.modules.system.entity.User">
+        SELECT * FROM system_user
+        WHERE customer_id = #{customerId}
+          AND deleted = 0
+        ORDER BY created_time DESC
+    </select>
+
+</mapper>
