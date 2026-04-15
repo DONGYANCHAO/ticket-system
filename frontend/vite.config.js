@@ -6,6 +6,29 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { resolve } from 'path'
 
 export default defineConfig({
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    exclude: ['**/node_modules/**', '**/dist/**'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html', 'lcov'],
+      include: ['src/**/*.{js,vue}'],
+      exclude: ['src/**/*.d.ts', 'src/router/**', 'src/stores/**'],
+      lines: 70,
+      functions: 70,
+      branches: 60,
+      statements: 70
+    },
+    setupFiles: ['./src/test/setup.js'],
+    server: {
+      deps: {
+        inline: ['element-plus']
+      }
+    },
+    css: true
+  },
   plugins: [
     vue(),
     AutoImport({
