@@ -1,0 +1,29 @@
+# Docker ignore for frontend
+node_modules/
+dist/
+.npm/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Git
+.git/
+.gitignore
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test
+**/__tests__/
+**/*.test.js
+**/*.spec.js
+coverage/
+
+# Docs
+*.md
+
+# Env
+.env.local

@@ -1,0 +1,71 @@
+# Backend
+backend/target/
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+backend/*.iml
+backend/.idea/
+backend/.vscode/
+backend/*.log
+backend/*.jar
+backend/*.war
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.npm/
+frontend/*.log
+frontend/.env.local
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+*.bak
+
+# Docker
+docker-compose.override.yml
+.docker/
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+Jenkinsfile
+
+# Test
+**/test/
+**/__tests__/
+**/*.test.js
+**/*.spec.js
+coverage/
+.nyc_output/
+
+# Misc
+.env
+.env.*
+!.env.example
+*.tmp
+*.temp
