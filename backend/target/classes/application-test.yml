@@ -1,0 +1,136 @@
+# ==========================================
+# 测试环境配置
+# 适用于自动化测试、CI/CD 流程
+# ==========================================
+
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  # 测试环境数据库配置（使用独立测试数据库）
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/ticket_system_test?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+      idle-timeout: 300000
+      connection-timeout: 20000
+      max-lifetime: 1200000
+
+  # 测试环境 Redis 配置（使用独立数据库索引）
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: 1  # 使用数据库 1，避免与开发环境冲突
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 4
+          max-idle: 4
+          min-idle: 0
+          max-wait: 500ms
+
+  # 测试环境邮件配置（使用 MailHog 或类似工具捕获邮件）
+  mail:
+    host: ${MAIL_HOST:localhost}
+    port: ${MAIL_PORT:1025}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+
+# 测试环境服务器配置
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /api
+  tomcat:
+    uri-encoding: UTF-8
+    threads:
+      max: 30
+      min-spare: 3
+
+# 测试环境日志配置（适中日志级别）
+logging:
+  level:
+    root: WARN
+    com.ticket: INFO
+    org.springframework.web: WARN
+    org.springframework.security: WARN
+    org.mybatis: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/ticket-system-test.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 3
+      total-size-cap: 50MB
+
+# MyBatis-Plus 测试环境配置
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.ticket.modules.*.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    cache-enabled: true
+  global-config:
+    db-config:
+      id-type: assign_id
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# JWT 配置（测试环境）
+jwt:
+  secret: ${JWT_SECRET:test-secret-key-for-ci-cd-only}
+  expiration: 3600000  # 1小时
+  refresh-expiration: 86400000  # 1天
+
+# 文件上传配置（测试环境使用临时目录）
+file:
+  upload-dir: ${FILE_UPLOAD_DIR:/tmp/ticket-uploads}
+  max-size: 10485760   # 10MB（测试环境限制更小）
+  allowed-extensions: jpg,jpeg,png,gif,pdf,doc,docx,xls,xlsx,txt
+
+# SLA 配置（测试环境使用更频繁的检查）
+sla:
+  check-cron: "0 */1 * * * ?"  # 每分钟检查SLA（便于测试）
+  auto-close-cron: "0 */5 * * * ?"  # 每5分钟检查自动关闭
+  draft-cleanup-cron: "0 0 * * * ?"  # 每小时清理草稿
+
+# 钉钉配置（测试环境关闭）
+dingtalk:
+  enabled: false
+  webhook: ""
+  secret: ""
+
+# 缓存配置（测试环境）
+cache:
+  spec: maximumSize=50,expireAfterWrite=2m
+  user-cache-spec: maximumSize=20,expireAfterWrite=2m
+  role-cache-spec: maximumSize=10,expireAfterWrite=5m
+  module-cache-spec: maximumSize=10,expireAfterWrite=5m
+
+# 测试环境特定配置
+app:
+  cors:
+    allowed-origins: "http://localhost:3000,http://localhost:80"
+  swagger:
+    enabled: true  # 测试环境启用 Swagger 便于 API 测试
+  test-data:
+    enabled: true  # 启用测试数据初始化

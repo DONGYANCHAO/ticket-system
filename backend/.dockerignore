@@ -1,0 +1,33 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+*.iml
+
+# Maven
+target/
+.mvn/
+mvnw
+mvnw.cmd
+
+# 测试
+src/test/
+
+# 日志
+*.log
+logs/
+
+# 本地配置
+.env
+.env.local
+
+# 文档
+README.md
+*.md
+
+# 临时文件
+*.tmp
+*.temp

@@ -1,0 +1,179 @@
+# ==========================================
+# 生产环境配置
+# 适用于正式生产部署
+# ==========================================
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  # 生产环境数据库配置（高性能连接池）
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/ticket_system?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=true&requireSSL=true
+    username: ${DB_USERNAME:ticket}
+    password: ${DB_PASSWORD:}
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 300000
+      connection-timeout: 20000
+      max-lifetime: 1800000
+      connection-test-query: SELECT 1
+      validation-timeout: 5000
+      leak-detection-threshold: 60000
+
+  # 生产环境 Redis 配置（集群或哨兵模式）
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: 0
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 16
+          max-idle: 8
+          min-idle: 4
+          max-wait: 2000ms
+        shutdown-timeout: 200ms
+
+  # 生产环境邮件配置（使用真实邮件服务器）
+  mail:
+    host: ${MAIL_HOST:}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 10000
+          timeout: 10000
+          writetimeout: 10000
+        debug: false
+
+# 生产环境服务器配置
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /api
+  tomcat:
+    uri-encoding: UTF-8
+    threads:
+      max: 200
+      min-spare: 20
+    max-connections: 10000
+    accept-count: 100
+    connection-timeout: 20000
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/plain
+    min-response-size: 1024
+
+# 生产环境日志配置（简洁日志，按级别分类）
+logging:
+  level:
+    root: WARN
+    com.ticket: INFO
+    org.springframework.web: WARN
+    org.springframework.security: WARN
+    org.mybatis: WARN
+    com.baomidou.mybatisplus: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: /app/logs/ticket-system.log
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 30
+      total-size-cap: 3GB
+
+# MyBatis-Plus 生产环境配置
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.ticket.modules.*.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    cache-enabled: true
+    lazy-loading-enabled: true
+    aggressive-lazy-loading: false
+  global-config:
+    db-config:
+      id-type: assign_id
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# JWT 配置（生产环境必须使用强密钥）
+jwt:
+  secret: ${JWT_SECRET:}  # 生产环境必须通过环境变量设置
+  expiration: 28800000  # 8小时
+  refresh-expiration: 604800000  # 7天
+
+# 文件上传配置（生产环境使用专用存储）
+file:
+  upload-dir: ${FILE_UPLOAD_DIR:/data/files}
+  max-size: 20971520   # 20MB
+  allowed-extensions: jpg,jpeg,png,gif,pdf,doc,docx,xls,xlsx,zip,rar,txt,log
+
+# SLA 配置（生产环境标准频率）
+sla:
+  check-cron: "0 */5 * * * ?"  # 每5分钟检查SLA
+  auto-close-cron: "0 0 * * * ?"  # 每小时检查自动关闭
+  draft-cleanup-cron: "0 0 3 * * ?"  # 每天凌晨3点清理草稿
+
+# 钉钉配置（生产环境可启用）
+dingtalk:
+  enabled: ${DINGTALK_ENABLED:false}
+  webhook: ${DINGTALK_WEBHOOK:}
+  secret: ${DINGTALK_SECRET:}
+
+# 缓存配置（生产环境优化）
+cache:
+  spec: maximumSize=1000,expireAfterWrite=10m
+  user-cache-spec: maximumSize=500,expireAfterWrite=10m
+  role-cache-spec: maximumSize=100,expireAfterWrite=30m
+  module-cache-spec: maximumSize=100,expireAfterWrite=1h
+
+# 生产环境特定配置
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost}  # 必须明确指定域名
+  swagger:
+    enabled: false  # 生产环境禁用 Swagger
+  security:
+    enabled: true
+    headers:
+      content-security-policy: "default-src 'self'"
+      x-frame-options: "DENY"
+      x-content-type-options: "nosniff"
+      x-xss-protection: "1; mode=block"
+      referrer-policy: "strict-origin-when-cross-origin"
+
+# Actuator 配置（生产环境安全配置）
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when_authorized
+      show-components: when_authorized
+    metrics:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true

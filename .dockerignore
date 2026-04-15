@@ -1,0 +1,72 @@
+# ==========================================
+# Docker 构建忽略文件
+# 优化构建上下文，减少镜像大小和构建时间
+# ==========================================
+
+# ---------------- Git ----------------
+.git
+.gitignore
+.gitattributes
+
+# ---------------- IDE ----------------
+.idea
+.vscode
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ---------------- 文档 ----------------
+README.md
+CHANGELOG.md
+docs/
+*.md
+
+# ---------------- CI/CD ----------------
+.github
+.gitlab-ci.yml
+.travis.yml
+Jenkinsfile
+
+# ---------------- 测试 ----------------
+**/test/
+**/tests/
+**/*.test.js
+**/*.spec.js
+**/*.test.ts
+**/*.spec.ts
+coverage/
+.nyc_output/
+
+# ---------------- 日志 ----------------
+*.log
+logs/
+log/
+
+# ---------------- 依赖（前端）----------------
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/coverage/
+
+# ---------------- 依赖（后端）----------------
+backend/target/
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+
+# ---------------- 本地配置 ----------------
+.env
+.env.local
+.env.*.local
+
+# ---------------- 临时文件 ----------------
+tmp/
+temp/
+*.tmp
+*.temp
+
+# ---------------- 其他 ----------------
+*.pid
+*.seed
+*.pid.lock

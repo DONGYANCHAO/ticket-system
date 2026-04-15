@@ -1,0 +1,107 @@
+# ==========================================
+# Codecov 覆盖率配置
+# ==========================================
+
+# 覆盖率报告配置
+coverage:
+  status:
+    project:
+      default:
+        target: 60%        # 项目整体覆盖率目标
+        threshold: 5%      # 允许的下降阈值
+        base: auto
+        branches:
+          - main
+          - develop
+        if_ci_failed: error
+        only_pulls: false
+        flags:
+          - unit
+        paths:
+          - "src"
+
+    patch:
+      default:
+        target: 70%        # 新增代码覆盖率目标
+        threshold: 5%
+        base: auto
+        branches:
+          - main
+          - develop
+        if_ci_failed: error
+        only_pulls: true
+        flags:
+          - unit
+        paths:
+          - "src"
+
+  # 忽略的文件和目录
+  ignore:
+    - "**/test/**"
+    - "**/tests/**"
+    - "**/*.test.js"
+    - "**/*.spec.js"
+    - "**/*.test.ts"
+    - "**/*.spec.ts"
+    - "**/node_modules/**"
+    - "**/target/**"
+    - "**/dist/**"
+    - "**/build/**"
+    - "**/*.config.js"
+    - "**/*.config.ts"
+    - "**/auto-imports.d.ts"
+    - "**/components.d.ts"
+
+# 评论配置
+comment:
+  layout: "reach,diff,flags,files,footer"
+  behavior: default
+  require_changes: false
+  require_base: false
+  require_head: true
+  hide_project_coverage: false
+
+# 标记配置
+flags:
+  backend:
+    paths:
+      - backend/src/main/java
+    carryforward: true
+  frontend:
+    paths:
+      - frontend/src
+    carryforward: true
+
+# 组件配置（用于分组显示覆盖率）
+component_management:
+  default_rules:
+    statuses:
+      - type: project
+        target: auto
+        branches:
+          - main
+          - develop
+
+  individual_components:
+    - component_id: backend
+      name: Backend
+      paths:
+        - backend/src/main/java/**
+    - component_id: frontend
+      name: Frontend
+      paths:
+        - frontend/src/**
+
+# 通知配置
+notify:
+  slack:
+    default:
+      url: "${SLACK_WEBHOOK_URL}"
+      only_pulls: false
+      branches:
+        - main
+        - develop
+
+# GitHub 检查配置
+github_checks:
+  annotations: true
