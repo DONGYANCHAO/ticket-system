@@ -1,0 +1,28 @@
+# Docker ignore for backend
+target/
+!.mvn/wrapper/maven-wrapper.jar
+*.log
+*.jar
+*.war
+
+# IDE
+.idea/
+.vscode/
+*.iml
+.project
+.classpath
+.settings/
+
+# Git
+.git/
+.gitignore
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test
+src/test/
+
+# Docs
+*.md

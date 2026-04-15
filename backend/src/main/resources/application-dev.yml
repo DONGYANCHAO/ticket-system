@@ -1,0 +1,70 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/ticket_system?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 3
+      idle-timeout: 300000
+      connection-timeout: 20000
+      max-lifetime: 1800000
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: 0
+      timeout: 10000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+
+jwt:
+  secret: ${JWT_SECRET:dev-jwt-secret-key-for-development-only}
+  expiration: 28800000
+  refresh-expiration: 604800000
+
+logging:
+  level:
+    root: info
+    com.ticket: debug
+    org.springframework.web: debug
+    org.springframework.security: debug
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: ./logs/application-dev.log
+    max-size: 50MB
+    max-history: 7
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /swagger-ui.html
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,env,beans,mappings
+  endpoint:
+    health:
+      show-details: always
+
+file:
+  upload-dir: ${FILE_UPLOAD_DIR:./uploads}
+
+system:
+  init-admin-username: admin
+  init-admin-password: Admin@123456
