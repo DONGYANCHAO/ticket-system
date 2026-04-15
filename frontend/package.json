@@ -4,9 +4,17 @@
   "description": "Customer Ticket Management System Frontend",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vite --mode development",
+    "dev:test": "vite --mode test",
+    "dev:prod": "vite --mode production",
+    "build": "vite build --mode production",
+    "build:dev": "vite build --mode development",
+    "build:test": "vite build --mode test",
+    "build:prod": "vite build --mode production",
     "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "format": "prettier --write src/"
   },
@@ -31,7 +39,11 @@
     "unplugin-vue-components": "^0.26.0",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.23.0",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "vitest": "^1.5.0",
+    "@vue/test-utils": "^2.4.5",
+    "@vitest/coverage-v8": "^1.5.0",
+    "jsdom": "^24.0.0"
   },
   "engines": {
     "node": ">=18.0.0",
