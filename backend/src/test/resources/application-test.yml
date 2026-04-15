@@ -1,0 +1,96 @@
+# ==========================================
+# 测试环境专用配置
+# 用于单元测试和集成测试
+# ==========================================
+
+spring:
+  application:
+    name: ticket-system-test
+
+  # 使用 H2 内存数据库进行测试
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL
+    username: sa
+    password:
+    schema: classpath:sql/schema-test.sql
+    data: classpath:sql/data-test.sql
+
+  # H2 控制台（仅在测试环境启用）
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  # 禁用 Redis（使用本地缓存）
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+
+  # 禁用邮件发送
+  mail:
+    host: localhost
+    port: 1025
+    username:
+    password:
+
+  # JPA/Hibernate 配置
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+
+# 服务器配置
+server:
+  port: 0  # 随机端口
+  servlet:
+    context-path: /api
+
+# 日志配置
+logging:
+  level:
+    root: WARN
+    com.ticket: DEBUG
+    org.springframework.test: DEBUG
+    org.hibernate.SQL: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# MyBatis-Plus 配置
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.ticket.modules.*.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    cache-enabled: false
+  global-config:
+    db-config:
+      id-type: assign_id
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# JWT 配置（测试环境使用简单密钥）
+jwt:
+  secret: test-secret-key-for-unit-testing-only-do-not-use-in-production
+  expiration: 3600000  # 1小时
+  refresh-expiration: 86400000  # 1天
+
+# 文件上传配置（测试环境使用临时目录）
+file:
+  upload-dir: ${java.io.tmpdir}/ticket-test-uploads
+  max-size: 10485760   # 10MB
+  allowed-extensions: jpg,jpeg,png,gif,pdf,txt
+
+# 测试环境特定配置
+app:
+  test:
+    enabled: true
+    mock-data: true
